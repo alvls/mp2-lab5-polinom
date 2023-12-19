@@ -36,7 +36,7 @@ public:
 	const TELEM& get_back() const;
 	size_t get_size() const;
 
-	template<class T>
+	template<class U>
 	class Iterator {
 		friend class LinkedList;
 		Node* cur;
@@ -47,35 +47,24 @@ public:
 			return *this;
 		}
 
-		Iterator operator++(int) {
-			Iterator res(cur);
-			cur = cur->next;
-			return res;
-		}
-
 		Iterator& operator--() {
 			cur = cur->prev;
 			return*this;
 		}
 
-		Iterator operator--(int) {
-			Iterator res(cur);
-			cur = cur->prev;
-			return res;
-		}
+		bool operator==(const Iterator it) const { return cur == it.cur; }
 
-		bool operator==(const Iterator it) { return cur == it.cur; }
+		bool operator!=(const Iterator it) const { return cur != it.cur; }
 
-		bool operator!=(const Iterator it) { return cur != it.cur; }
+		U& operator*() const { return cur->data; }
 
-		T& operator*() const { return cur->data; }
-		T* operator ->() const { return &cur->data; }
+		U* operator->() const { return &cur->data; }
 	};
 
-	Iterator begin() { return front; }
-	Iterator end() { return back; }
-	Iterator cbegin() const { return front; }
-	Iterator cend() { return back; }
+	Iterator<const TELEM> begin() const { return front; }
+	Iterator<const TELEM> end()  const { return nullptr; }
+	Iterator<const TELEM> cbegin() const { return front; }
+	Iterator<const TELEM> cend() const { return nullptr; }
 };
 
 template <class TELEM>

@@ -15,7 +15,7 @@ void SortedList<TELEM>::insert_in_order(TELEM el) {
 		this->push_back(el);
 		return;
 	}
-	if (size == 1) {
+	if (this->size == 1) {
 		if (this->front->data > el) {
 			this->push_front(el);
 		}
@@ -30,8 +30,9 @@ void SortedList<TELEM>::insert_in_order(TELEM el) {
 	}
 	typename LinkedList<TELEM>::Node* left = this->front;
 	typename LinkedList<TELEM>::Node* right = left->next;
-	while (this->right && this->right->data <= el) {
-		left = left->next; this->right = this->right->next;
+	while (right && right->data <= el) {
+		left = left->next; 
+		right = right->next;
 	}
 	if (!right) {
 		this->push_back(el);

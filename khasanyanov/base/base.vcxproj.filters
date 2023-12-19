@@ -18,7 +18,7 @@
     <ClCompile Include="monom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Polinom.cpp">
+    <ClCompile Include="polinom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,10 @@
     <ClInclude Include="monom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Polinom.h">
+    <ClInclude Include="polinom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sorted_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "linked_list.h"
+#include "sorted_list.h"
 #include "monom.h"
 #include "polinom.h"
 
@@ -12,17 +12,18 @@ int main()
     for (size_t i = 0; i < p.get_monoms().get_size(); i++)
         std::cout << p.get_monoms()[i] << " ";
     cout << endl;
-    LinkedList<Monom> list;
+    SortedList<Monom> list;
     for (size_t i = 0; i < 10; i += 2)
         list.insert_in_order({1.0,i,i,i});
     list.insert_in_order({2,3,4,2});
     list.insert_in_order({-4,5,5,6});
     list.insert_in_order({23,1,0,3});
     list.insert_in_order({23,1,4,0 });
-    for (size_t i = 0; i < list.get_size(); i++)
-        std::cout << list[i] << " ";
-    Monom a(5, 2, 3, 4), b(3, 2, 3, 4);
+    for (const auto& monom : p.get_monoms())    {
+        std::cout << monom << " ";
+    }
     cout << endl;
+    Monom a(5, 2, 3, 4), b(3, 2, 3, 4);
     cout << "a+b=" << a + b << endl;
     cout << "a-b=" << a - b << endl;
     cout << "a*b=" << a * b << endl;

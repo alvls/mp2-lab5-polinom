@@ -6,41 +6,76 @@
 using namespace std;
 
 template <class TELEM>
-class LinkedList {
-	struct Node {                           // узел
-		Node* next, * prev;                 // указатель на предущий и следующий узел
-		TELEM data;                         // данные узла
-		Node() = delete;                    // конструктор по умолчанию недоступен
-		Node(TELEM d);                      // конструктор-инициализатор
+class LinkedList {                              // узел
+protected:
+	struct Node {
+		TELEM data;                             // данные узла
+		Node* next = nullptr, * prev = nullptr; // указатель на предущий и следующий узел
 	};
-private:
-	Node* front, * back;                    // указатели на первый и последний элемент списка
-	size_t size = 0;						// кол-во элементов в списке
-	Node* at(const size_t index) const;		// получить узел по индексу 
-public:
-	LinkedList();							// конструктор по умолчанию
-	LinkedList(const LinkedList& l);        // конструктор копирования
-	~LinkedList();							// деструктор
-	bool empty() const;						// проверка на пустоту списка
-	void push_front(TELEM el);				// добавить элемент в начало
-	void push_back(TELEM el);				// добавить элемент в конец
-	void pop_front();						// удалить первый элемент
-	void pop_back();						// удалить второй элемент
-	void  erase(int index);					// удалить элемент по индексу
-	void insert(int index, const TELEM& el);// вставить элемент по индексу
-	void insert_in_order(TELEM el);         // вставить по порядку
-	TELEM operator[](const size_t index);   // получить значение элемента по индексу
-	const TELEM operator[](const size_t index) const;
 
-	TELEM& get_front();						// геттеры
+	Node* front, * back;                        // указатели на первый и последний элемент списка
+	size_t size = 0;						    // кол-во элементов в списке
+	Node* at(const size_t index) const;		    // получить узел по индексу 
+public:										    
+	LinkedList();							    // конструктор по умолчанию
+	LinkedList(const LinkedList& l);            // конструктор копирования
+	~LinkedList();							    // деструктор
+	bool empty() const;						    // проверка на пустоту списка
+	void push_front(TELEM el);				    // добавить элемент в начало
+	void push_back(TELEM el);				    // добавить элемент в конец
+	void pop_front();						    // удалить первый элемент
+	void pop_back();						    // удалить второй элемент
+	void erase(int index);					    // удалить элемент по индексу
+	void insert(int index, const TELEM& el);    // вставить элемент по индексу
+	TELEM& operator[](const size_t index);      // получить значение элемента по индексу
+	const TELEM& operator[](const size_t index) const;
+
+	TELEM& get_front();					    	// геттеры
 	TELEM& get_back();
 	const TELEM& get_front() const;
 	const TELEM& get_back() const;
 	size_t get_size() const;
 
-	class iterator {
+	template<class T>
+	class Iterator {
+		friend class LinkedList;
+		Node* cur;
+		Iterator(Node* node) : cur(node) {}
+	public:
+		Iterator& operator++() {
+			cur = cur->next;
+			return *this;
+		}
 
+		Iterator operator++(int) {
+			Iterator res(cur);
+			cur = cur->next;
+			return res;
+		}
+
+		Iterator& operator--() {
+			cur = cur->prev;
+			return*this;
+		}
+
+		Iterator operator--(int) {
+			Iterator res(cur);
+			cur = cur->prev;
+			return res;
+		}
+
+		bool operator==(const Iterator it) { return cur == it.cur; }
+
+		bool operator!=(const Iterator it) { return cur != it.cur; }
+
+		T& operator*() const { return cur->data; }
+		T* operator ->() const { return &cur->data; }
 	};
+
+	Iterator begin() { return front; }
+	Iterator end() { return back; }
+	Iterator cbegin() const { return front; }
+	Iterator cend() { return back; }
 };
 
 template <class TELEM>
@@ -65,7 +100,7 @@ size_t LinkedList<TELEM>::get_size() const { return size; }
 
 template <class TELEM>
 void LinkedList<TELEM>::push_front(TELEM el) {
-	Node* tmp = new Node(el);
+	Node* tmp = new Node{ el };
 	tmp->next = front;
 	if (front != nullptr)
 		front->prev = tmp;
@@ -77,7 +112,7 @@ void LinkedList<TELEM>::push_front(TELEM el) {
 
 template <class TELEM>
 void LinkedList<TELEM>::push_back(TELEM el) {
-	Node* tmp = new Node(el);
+	Node* tmp = new Node{ el };
 	tmp->prev = back;
 	if (back != nullptr)
 		back->next = tmp;
@@ -150,7 +185,7 @@ void LinkedList<TELEM>::insert(int index, const TELEM& el) {
 	else {
 		Node* right = at(index);
 		Node* left = right->prev;
-		Node* tmp = new Node(el);
+		Node* tmp = new Node{ el };
 		tmp->next = right;
 		tmp->prev = left;
 		left->next = tmp;
@@ -160,42 +195,13 @@ void LinkedList<TELEM>::insert(int index, const TELEM& el) {
 }
 
 template <class TELEM>
-void LinkedList<TELEM>::insert_in_order(TELEM el) {
-	if (empty()) push_back(el);
-	else if (size == 1) { front->data > el ? push_front(el) : push_back(el); }
-	else {
-		if (front->data > el) {
-			push_front(el);
-			return;
-		}
-		Node* left = front;
-		Node* right = left->next;
-		Node* tmp = new Node(el);
-		while (right && right->data <= tmp->data) {
-			left = left->next; right = right->next;
-		}
-		if (!right) {
-			push_back(el);
-			delete tmp;
-		}
-		else {
-			tmp->next = right;
-			tmp->prev = left;
-			left->next = tmp;
-			right->prev = tmp;
-			size++;
-		}
-	}
-}
-
-template <class TELEM>
-TELEM LinkedList<TELEM>::operator[](const size_t index) {
+TELEM& LinkedList<TELEM>::operator[](const size_t index) {
 	if (index < 0 || index > size) throw out_of_range("Invalid nidex");
 	return at(index)->data;
 }
 
 template<class TELEM>
-inline const TELEM LinkedList<TELEM>::operator[](const size_t index) const{
+inline const TELEM& LinkedList<TELEM>::operator[](const size_t index) const{
 	if (index < 0 || index > size) throw out_of_range("Invalid nidex");
 	return at(index)->data;
 }
@@ -213,9 +219,6 @@ typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) cons
 	}
 	return tmp;
 }
-
-template <class TELEM>
-LinkedList<TELEM>::Node::Node(TELEM d) : data(d) { next = prev = nullptr; }
 
 template<class TELEM>
 inline const TELEM& LinkedList<TELEM>::get_front() const { return front; }

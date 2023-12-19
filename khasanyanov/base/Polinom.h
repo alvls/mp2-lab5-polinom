@@ -4,7 +4,7 @@
 #include <vector>
 #include <regex>
 #include <map>
-#include "linked_list.h"
+#include "sorted_list.h"
 #include "monom.h"
 
 
@@ -12,7 +12,7 @@ using namespace std;
 
 class Polinom {
 
-	LinkedList<Monom> monoms;
+	SortedList<Monom> monoms;
 	map<char, double> operands;
 
 public:

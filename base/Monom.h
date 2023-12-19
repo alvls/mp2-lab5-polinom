@@ -1,4 +1,4 @@
-#ifndef __MONOM_H__
+﻿#ifndef __MONOM_H__
 #define __MONOM_H__
 
 #include <iostream>
@@ -7,13 +7,13 @@
 using namespace std;
 
 struct Monom {
-    double coefficient; 
-    unsigned int degree; 
-    Monom(double coef = 0.0, unsigned int deg = 0) : coefficient(coef), degree(deg) {}
-    bool operator<(const Monom& other) const;
-    bool operator==(const Monom& other) const;
-    double evaluate(double x, double y, double z) const;
-    void print() const;
+	double coefficient;
+	unsigned int degree;
+	Monom(double coef = 0.0, unsigned int deg = 0) : coefficient(coef), degree(deg) {}
+	bool operator<(const Monom& other) const;
+	bool operator==(const Monom& other) const;
+	double evaluate(double x, double y, double z) const;
+	void print() const;
 };
 
 

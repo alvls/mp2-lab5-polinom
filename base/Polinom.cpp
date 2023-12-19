@@ -1,4 +1,4 @@
-#include "Polinom.h"
+п»ї#include "Polinom.h"
 
 #include <regex>
 #include <string>
@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 
-// конструктор из строки (на регулярном выражении).
+// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· СЃС‚СЂРѕРєРё (РЅР° СЂРµРіСѓР»СЏСЂРЅРѕРј РІС‹СЂР°Р¶РµРЅРёРё).
 Polinom::Polinom(const string& polinomStr) {
 	regex monomRegex(R"(\s*([-+]?\d*\.?\d*)\s*(x(\^\d+)?)?\s*(y(\^\d+)?)?\s*(z(\^\d+)?)\s*)");
 	auto monomsBegin = sregex_iterator(polinomStr.begin(), polinomStr.end(), monomRegex);
@@ -50,7 +50,7 @@ void Polinom::addMonom(const Monom& monom) {
 	monoms.PushBack(monom);
 }
 
-// Упрощение (приведение подобных + сортировка по степени)
+// РЈРїСЂРѕС‰РµРЅРёРµ (РїСЂРёРІРµРґРµРЅРёРµ РїРѕРґРѕР±РЅС‹С… + СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ СЃС‚РµРїРµРЅРё)
 void Polinom::simplify() {
 	vector<Monom> monomVector;
 	while (!monoms.IsEmpty()) {
@@ -107,11 +107,11 @@ pair<Polinom, Polinom> Polinom::divide(const Polinom& divisor) const {
 	}
 
 	Polinom quotient, remainder = *this;
-	Monom divisorLeadMonom = divisor.monoms.At(divisor.monoms.Size() - 1); // Старший моном делителя
+	Monom divisorLeadMonom = divisor.monoms.At(divisor.monoms.Size() - 1); // РЎС‚Р°СЂС€РёР№ РјРѕРЅРѕРј РґРµР»РёС‚РµР»СЏ
 
 	while (!remainder.monoms.IsEmpty() &&
 		remainder.monoms.At(remainder.monoms.Size() - 1).degree >= divisorLeadMonom.degree) {
-		Monom remainderLeadMonom = remainder.monoms.At(remainder.monoms.Size() - 1); // Старший моном делимого
+		Monom remainderLeadMonom = remainder.monoms.At(remainder.monoms.Size() - 1); // РЎС‚Р°СЂС€РёР№ РјРѕРЅРѕРј РґРµР»РёРјРѕРіРѕ
 		Monom quotientMonom = Monom(remainderLeadMonom.coefficient / divisorLeadMonom.coefficient, remainderLeadMonom.degree - divisorLeadMonom.degree);
 		quotient.addMonom(quotientMonom);
 		Polinom temp;
@@ -141,7 +141,7 @@ double Polinom::evaluate(double x, double y, double z) const {
 	return sum;
 }
 
-// Вывод полинома
+// Р’С‹РІРѕРґ РїРѕР»РёРЅРѕРјР°
 void Polinom::print() const {
 	for (size_t i = 0; i < monoms.Size(); ++i) {
 		monoms.At(i).print();

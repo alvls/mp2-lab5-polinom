@@ -27,4 +27,5 @@ int main()
     cout << "a-b=" << a - b << endl;
     cout << "a*b=" << a * b << endl;
     cout << "a/b=" << a / b << endl;
+    cout << "a= " << a.calculate(3.8, 4.2, 3.2345);
 }

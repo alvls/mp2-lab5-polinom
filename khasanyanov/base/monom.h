@@ -13,6 +13,7 @@ class Monom {
 	size_t degX,
 	degY,
 	degZ;
+	double degree(double x, size_t degree);
 public:
 	Monom();
 	Monom(double K, size_t X, size_t Y, size_t Z);
@@ -21,6 +22,7 @@ public:
 	size_t get_y() const;
 	size_t get_z() const;
 
+	double calculate(size_t x, size_t y, size_t z);
 	bool equal(const Monom& m);
 	bool operator<(const Monom& m);
 	bool operator<=(const Monom& m);

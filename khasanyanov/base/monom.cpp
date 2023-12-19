@@ -91,6 +91,17 @@ ostream& operator<<(ostream& os, const Monom& m) {
 	return os;
 }
 
+double Monom:: degree(double x, size_t degree) {
+	if (degree == 0) return 1.0;
+	double res = 1.0;
+	for (size_t i = 0; i < degree; res *= x, i++);
+	return res;
+}
+
+double Monom::calculate(size_t x, size_t y, size_t z){
+	return static_cast<double>(k) * powf(x, degX) * powf(y, degY) * powf(z, degZ);
+}
+
 size_t Monom::get_koef() const { return k; }
 
 size_t Monom::get_x() const { return degX; }

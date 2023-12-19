@@ -16,12 +16,12 @@ class LinkedList {
 private:
 	Node* front, * back;                    // указатели на первый и последний элемент списка
 	size_t size = 0;						// кол-во элементов в списке
-	Node* at(const size_t index);			// получить узел по индексу 
+	Node* at(const size_t index) const;		// получить узел по индексу 
 public:
 	LinkedList();							// конструктор по умолчанию
 	LinkedList(const LinkedList& l);        // конструктор копирования
 	~LinkedList();							// деструктор
-	bool empty();							// проверка на пустоту списка
+	bool empty() const;						// проверка на пустоту списка
 	void push_front(TELEM el);				// добавить элемент в начало
 	void push_back(TELEM el);				// добавить элемент в конец
 	void pop_front();						// удалить первый элемент
@@ -30,36 +30,38 @@ public:
 	void insert(int index, const TELEM& el);// вставить элемент по индексу
 	void insert_in_order(TELEM el);         // вставить по порядку
 	TELEM operator[](const size_t index);   // получить значение элемента по индексу
+	const TELEM operator[](const size_t index) const;
 
 	TELEM& get_front();						// геттеры
 	TELEM& get_back();
-	size_t get_size();
+	const TELEM& get_front() const;
+	const TELEM& get_back() const;
+	size_t get_size() const;
+
+	class iterator {
+
+	};
 };
 
 template <class TELEM>
 inline LinkedList<TELEM>::LinkedList() { front = back = nullptr; }
 
 template <class TELEM>
-inline LinkedList<TELEM>::LinkedList(const LinkedList& l) : size(l.size) {
-	if (!l.front) {
-		front = back = nullptr;
-		return;
+inline LinkedList<TELEM>::LinkedList(const LinkedList& l) : size(l.size), front(nullptr), back(nullptr) {
+	if (!l.front) return;
+	Node* pNew = front = new Node{ *l.front };
+	for (; pNew->next; pNew = pNew->next) {
+		pNew->prev = back;
+		pNew->next = new Node{ *pNew->next };
+		back = pNew;
 	}
-	Node* current, * c_l = l.front;
-	front = current = new Node{ l.front->data };
-	while (c_l->next) {
-		current->next = new Node{ c_l->data };
-		current = current->next;
-		c_l = c_l->next;
-	}
-	back = current;
 }
 
 template <class TELEM>
-bool LinkedList<TELEM>::empty() { return (front == nullptr && back == nullptr); }
+bool LinkedList<TELEM>::empty() const { return (size == 0); }
 
 template <class TELEM>
-size_t LinkedList<TELEM>::get_size() { return size; }
+size_t LinkedList<TELEM>::get_size() const { return size; }
 
 template <class TELEM>
 void LinkedList<TELEM>::push_front(TELEM el) {
@@ -192,11 +194,17 @@ TELEM LinkedList<TELEM>::operator[](const size_t index) {
 	return at(index)->data;
 }
 
+template<class TELEM>
+inline const TELEM LinkedList<TELEM>::operator[](const size_t index) const{
+	if (index < 0 || index > size) throw out_of_range("Invalid nidex");
+	return at(index)->data;
+}
+
 template <class TELEM>
 LinkedList<TELEM>::~LinkedList() { while (!empty()) pop_back(); }
 
 template <class TELEM>
-typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) {
+typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) const {
 	Node* tmp = front;
 	for (size_t i = 0; i != index; i++) {
 		if (tmp == nullptr)
@@ -208,5 +216,11 @@ typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) {
 
 template <class TELEM>
 LinkedList<TELEM>::Node::Node(TELEM d) : data(d) { next = prev = nullptr; }
+
+template<class TELEM>
+inline const TELEM& LinkedList<TELEM>::get_front() const { return front; }
+
+template<class TELEM>
+inline const TELEM& LinkedList<TELEM>::get_back() const { return back; }
 #endif
 

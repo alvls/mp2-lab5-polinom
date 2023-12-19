@@ -21,9 +21,11 @@ void Polinom::add(const Monom& m){
 	//monoms.push_back(m);
 }
 
-LinkedList<Monom> Polinom::get_monoms() const { return monoms; }
+const LinkedList<Monom>& Polinom::get_monoms() const { return monoms; }
 
-ostream& operator<<(ostream& os, const Polinom& p){
+const map<char, double>& Polinom::get_operands() const { return operands; }
+
+ostream& operator<<(ostream& os, const Polinom& p) {
 	//for(size_t i = 0; i < p.list)
 	return os;
 }

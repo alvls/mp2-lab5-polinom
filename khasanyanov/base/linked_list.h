@@ -60,7 +60,10 @@ public:
 
 		U* operator->() const { return &cur->data; }
 	};
-
+	Iterator<TELEM> begin()  { return front; }
+	Iterator<TELEM> end()   { return nullptr; }
+	/*Iterator<TELEM> begin() const { return front; }
+	Iterator<TELEM> end() const { return nullptr; }*/
 	Iterator<const TELEM> begin() const { return front; }
 	Iterator<const TELEM> end()  const { return nullptr; }
 	Iterator<const TELEM> cbegin() const { return front; }
@@ -210,9 +213,9 @@ typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) cons
 }
 
 template<class TELEM>
-inline const TELEM& LinkedList<TELEM>::get_front() const { return front; }
+inline const TELEM& LinkedList<TELEM>::get_front() const { return front->data; }
 
 template<class TELEM>
-inline const TELEM& LinkedList<TELEM>::get_back() const { return back; }
+inline const TELEM& LinkedList<TELEM>::get_back() const { return back->data; }
 #endif
 

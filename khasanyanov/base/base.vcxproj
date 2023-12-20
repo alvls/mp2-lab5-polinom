@@ -144,13 +144,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="monom.cpp" />
-    <ClCompile Include="polinom.cpp" />
+    <ClCompile Include="polynom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sorted_list.h" />
     <ClInclude Include="monom.h" />
     <ClInclude Include="linked_list.h" />
-    <ClInclude Include="polinom.h" />
+    <ClInclude Include="polynom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

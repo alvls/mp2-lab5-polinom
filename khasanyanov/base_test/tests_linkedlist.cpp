@@ -6,6 +6,24 @@ TEST(LinkedList, can_create_list)
 	ASSERT_NO_THROW(LinkedList<int> l);
 }
 
+TEST(LinkedList, can_copy_list)
+{
+	LinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.push_back(4);
+	list.push_back(5);
+
+	LinkedList<int> copied = list;
+
+	ASSERT_EQ(list.get_size(), copied.get_size());
+	for (int i = 0; i < list.get_size(); i++)
+	{
+		EXPECT_EQ(list[i], copied[i]);
+	}
+}
+
 TEST(LinkedList, method_empty_return_true_value)
 {
 	LinkedList<int> l;

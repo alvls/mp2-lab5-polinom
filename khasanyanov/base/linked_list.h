@@ -62,8 +62,6 @@ public:
 	};
 	Iterator<TELEM> begin()  { return front; }
 	Iterator<TELEM> end()   { return nullptr; }
-	/*Iterator<TELEM> begin() const { return front; }
-	Iterator<TELEM> end() const { return nullptr; }*/
 	Iterator<const TELEM> begin() const { return front; }
 	Iterator<const TELEM> end()  const { return nullptr; }
 	Iterator<const TELEM> cbegin() const { return front; }
@@ -82,6 +80,8 @@ inline LinkedList<TELEM>::LinkedList(const LinkedList& l) : size(l.size), front(
 		pNew->next = new Node{ *pNew->next };
 		back = pNew;
 	}
+	pNew->prev = back;
+	back = pNew;
 }
 
 template <class TELEM>
@@ -199,7 +199,7 @@ inline const TELEM& LinkedList<TELEM>::operator[](const size_t index) const{
 }
 
 template <class TELEM>
-LinkedList<TELEM>::~LinkedList() { while (!empty()) pop_back(); }
+LinkedList<TELEM>::~LinkedList() { while (size>0) pop_back(); }
 
 template <class TELEM>
 typename LinkedList<TELEM>::Node* LinkedList<TELEM>::at(const size_t index) const {

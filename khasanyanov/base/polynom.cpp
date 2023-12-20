@@ -1,10 +1,24 @@
 #include "polynom.h"
 
-Polynom::Polynom(){
-
-}
+Polynom::Polynom() {}
 
 Polynom::Polynom(const Polynom& p) : monoms(p.monoms), operands(p.operands) {}
+
+map<string, function<Polynom(const Polynom&, const Polynom&)> > Polynom::binary_operations = { 
+	
+	{"+", [](const Polynom& a, const Polynom& b) {return a + b; }},
+	{"-", [](const Polynom& a, const Polynom& b) {return a - b; }},
+	{"*", [](const Polynom& a, const Polynom& b) {return a * b; }},
+	{"/", [](const Polynom& a, const Polynom& b) {return a / b; }}
+};
+
+Polynom Polynom::differential(char variable){
+	Polynom res(*this);
+	switch (variable) {
+	case 'x':
+
+	}
+}
 
 double Polynom::calculate(double x, double y, double z){
 	if (monoms.empty()) throw logic_error("empty Polynom");

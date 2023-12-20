@@ -6,6 +6,7 @@
 #include <map>
 #include "sorted_list.h"
 #include "monom.h"
+#include <functional>
 
 
 using namespace std;
@@ -14,7 +15,9 @@ class Polynom {
 
 	SortedList<Monom> monoms;
 	map<char, double> operands;
-
+	static map<string, function<Polynom(const Polynom&, const Polynom&)> > binary_operations;
+	static map<string, function<Polynom(const Polynom&)> > unary_operations;
+	Polynom differential(char variable);
 public:
 	Polynom();
 	Polynom(string s);

@@ -13,7 +13,7 @@ int main()
     p.add({ -3,3,4,2 });
     p.add({ 35,-4,0,9 });
     p.add({ -7,0,0,0 });
-    s = p / p;
+    s = p;
     cout << s;
     cout << endl << "p= " << s.calculate(1, 2.4, 1) << endl;
     SortedList<Monom> list;

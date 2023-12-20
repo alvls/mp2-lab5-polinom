@@ -7,6 +7,8 @@ Monom::Monom(double K, size_t X, size_t Y, size_t Z) : k(K), degX(X), degY(Y), d
 	if (X < 0 || Y < 0 || Z < 0) throw invalid_argument("negative degree");
 }
 
+Monom::Monom(const Monom& m) : k(m.k), degX(m.degX), degY(m.degY), degZ(m.degZ) {}
+
 bool Monom::equal(const Monom& m) {
 	return (degX == m.degX && degY == m.degY && degZ == m.degZ);
 }
@@ -83,23 +85,37 @@ Monom& Monom::operator/=(const Monom& m) {
 	return (*this);
 }
 
+Monom Monom::operator*(const double& k){
+	return Monom{this->k*k, degX, degY, degZ};
+}
+
+Monom& Monom::operator*=(const double& k) {
+	this->k *= k;
+	return *this;
+}
+
+Monom Monom::operator/(const double& k) {
+	return Monom{ this->k / k, degX, degY, degZ };
+}
+
+Monom& Monom::operator/=(const double& k) {
+	this->k /= k;
+	return *this;
+}
+
 ostream& operator<<(ostream& os, const Monom& m) {
-	m.k == 1 ? os << "" : os << m.k;
+	if (m.k == 0) return os;
+	else if (m.k == 1) os << "";
+	else if (m.k == -1) os << "-";
+	else os << m.k;
 	m.degX == 0 ? os << "" : os << "x" << m.degX;
 	m.degY == 0 ? os << "" : os << "y" << m.degY;
 	m.degZ == 0 ? os << "" : os << "z" << m.degZ;
 	return os;
 }
 
-double Monom:: degree(double x, size_t degree) {
-	if (degree == 0) return 1.0;
-	double res = 1.0;
-	for (size_t i = 0; i < degree; res *= x, i++);
-	return res;
-}
-
-double Monom::calculate(size_t x, size_t y, size_t z){
-	return static_cast<double>(k) * powf(x, degX) * powf(y, degY) * powf(z, degZ);
+double Monom::calculate(double x, double y, double z) const {
+	return k == 0.0 ? 0.0 : static_cast<double>(k) * powf(x, degX) * powf(y, degY) * powf(z, degZ);
 }
 
 size_t Monom::get_koef() const { return k; }

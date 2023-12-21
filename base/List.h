@@ -46,15 +46,10 @@ List<T>::List() : pFirst(nullptr), size_of(0), last_viewed_element(nullptr), las
 template<class T>
 List<T>::List(const List<T>& list)
 {
-	if (*this != list)
-	{
-		this->pFirst = nullptr;
-		this->size_of = 0;
-		for (Node* l = list.pFirst; l != nullptr; l = l->pNext)
-			insertInOrder(l->elem);
-		this->last_viewed_element = list.last_viewed_element;
-		this->last_viewed_index = list.last_viewed_index;
-	}
+	this->pFirst = nullptr;
+	this->size_of = 0;
+	for (Node* l = list.pFirst; l != nullptr; l = l->pNext)
+		insertInOrder(l->elem);
 }
 
 template<class T>
@@ -102,6 +97,8 @@ void List<T>::findOfNodeByElem(T elem)
 template<class T>
 void List<T>::findOfNodeByIndex(int index)
 {
+	if ((index >= this->size()) || (index < 0))
+		throw "Incorrect index";
 	if (index == last_viewed_index)
 		return;
 	if (index < abs(last_viewed_index - index))
@@ -177,13 +174,20 @@ void List<T>::erase(int index)
 template<class T>
 bool List<T>::operator==(const List<T>& list)
 {
-	return (this->pFirst == list.pFirst);
+	if (this->size_of != list.size_of)
+		return false;
+	Node* p1 = this->pFirst;
+	Node* p2 = list.pFirst;
+	for (; p1 != nullptr; p1 = p1->pNext, p2 = p2->pNext)
+		if (!(p1->elem == p2->elem))
+			return false;
+	return true;
 }
 
 template<class T>
 bool List<T>::operator!=(const List<T>& list)
 {
-	return (this->pFirst != list.pFirst);
+	return (!(*this == list));
 }
 
 template<class T>
@@ -202,8 +206,6 @@ List<T>& List<T>::operator=(const List<T>& list)
 	insertFirst(list.pFirst->elem);
 	for (Node* l = list.pFirst->pNext; l != nullptr; l = l->pNext)
 		insertInOrder(l->elem);
-	this->last_viewed_element = list.last_viewed_element;
-	this->last_viewed_index = list.last_viewed_index;
 	return *this;
 }
 
@@ -235,7 +237,7 @@ template <class T>
 T& List<T>::operator[](int index)
 {
 	if (index >= size_of)
-		throw (-1);
+		throw "Incorrect index";
 	findOfNodeByIndex(index);
 	return last_viewed_element->elem;
 }

@@ -6,10 +6,10 @@
 
 using namespace std;
 
+
 class Polinom
 {
 	List<Monom> expression;
-	map<string, int> variables;
 	int max_degree;
 	int next_degree;
 public:
@@ -23,6 +23,7 @@ public:
 	Polinom Integration(string variable);
 	int size();
 	string ToString();
+	vector<string> GetAllVariables();
 private:
 	bool CheckOfVariable(string variable);
 };

@@ -1,13 +1,13 @@
 #include "Monom.h"
 
-Monom::Monom(double _key, double _koeff, map<string, int> _variables) : key(_key), koefficient(_koeff), variables(_variables) {}
+Monom::Monom(double _key, double _coeff, map<string, int> _variables) : key(_key), coefficient(_coeff), variables(_variables) {}
 
 Monom& Monom::operator=(const Monom& m)
 {
 	if (!(*this == m))
 	{
 		this->key = m.key;
-		this->koefficient = m.koefficient;
+		this->coefficient = m.coefficient;
 		this->variables = m.variables;
 	}
 	return *this;
@@ -31,18 +31,18 @@ bool Monom::operator==(const Monom& new_monom)
 void Monom::operator+=(const Monom& new_monom)
 {
 	if (!(*this == new_monom))
-		throw - 1;
-	this->koefficient += new_monom.koefficient;
+		throw "Incorrect monom";
+	this->coefficient += new_monom.coefficient;
 }
 
 void Monom::operator*=(int num)
 {
-	this->koefficient *= num;
+	this->coefficient *= num;
 }
 
 void Monom::operator*=(const Monom& new_monom)
 {
-	this->koefficient *= new_monom.koefficient;
+	this->coefficient *= new_monom.coefficient;
 	this->key += new_monom.key;
 	this->variables.insert(new_monom.variables.begin(), new_monom.variables.end());
 }
@@ -51,12 +51,12 @@ Monom Monom::Differentiation(int p, string variable)
 {
 	if (this->variables.count(variable) == 0)
 	{
-		this->koefficient = 0;
+		this->coefficient = 0;
 		return *this;
 	}
 	int v = this->key % (int)pow(p, this->variables[variable] + 1) / pow(p, this->variables[variable]);
 	this->key -= pow(p, this->variables[variable]);
-	this->koefficient *= v;
+	this->coefficient *= v;
 	if (v == 1)
 		this->variables.erase(variable);
 	return *this;
@@ -68,18 +68,18 @@ Monom Monom::Integration(int p, string variable, int degree)
 		this->variables.emplace(variable, degree);
 	int v = this->key % (int)pow(p, degree + 1) / pow(p, degree) + 1;
 	this->key += pow(p, degree);
-	this->koefficient /= v;
+	this->coefficient /= v;
 	return *this;
 }
 
 bool Monom::is_empty()
 {
-	return (this->koefficient == 0);
+	return (this->coefficient == 0);
 }
 
 double Monom::Calculation(int p, const map<string, double>& values)
 {
-	double res = this->koefficient;
+	double res = this->coefficient;
 	for (auto it = this->variables.begin(); it != this->variables.end(); it++)
 	{
 		auto ss = values.find(it->first);
@@ -91,12 +91,12 @@ double Monom::Calculation(int p, const map<string, double>& values)
 string Monom::ToString(int p)
 {
 	string str = "";
-	if (this->koefficient > 0)
+	if (this->coefficient > 0)
 		str += '+';
-	if (this->koefficient == (int)this->koefficient)
-		str += to_string((int)this->koefficient);
+	if (this->coefficient == (int)this->coefficient)
+		str += to_string((int)this->coefficient);
 	else
-		str += to_string(this->koefficient);
+		str += to_string(this->coefficient);
 	for (const auto& s : this->variables)
 	{
 		str += s.first;

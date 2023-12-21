@@ -8,7 +8,7 @@ using namespace std;
 class Monom
 {
 	int key;
-	double koefficient;
+	double coefficient;
 	map<string, int> variables;
 public:
 	Monom(double _key, double _koeff, map<string, int> _variables);

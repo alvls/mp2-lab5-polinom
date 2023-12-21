@@ -1,11 +1,72 @@
 #include "monom.h"
-
+#include <cctype>
 
 Monom::Monom() : k(0), degX(0), degY(0), degZ(0) {}
 
 Monom::Monom(double K, int X, int Y, int Z) : k(K), degX(X), degY(Y), degZ(Z) {}
 
 Monom::Monom(const Monom& m) : k(m.k), degX(m.degX), degY(m.degY), degZ(m.degZ) {}
+
+void Monom::match_pattern(const string& str) const {
+	regex pattern("([+-]?\\d*)(x\\d*?)?(y\\d*?)?(z\\d*?)?");
+	if (!regex_match(str, pattern)) throw invalid_argument("invalid expression");
+}
+
+void Monom::set_coeffitient(const string& str) {
+	if (str.empty()) k = 1.0;
+	else if (str == "-") k = -1.0;
+	else {
+		k = stod(str);
+	}
+}
+
+void Monom::set_degree(const char& c, const string& degree) {
+	int d = degree.empty() ? 1 : stoi(degree);
+	switch (c) {
+	case 'x':
+		degX = d;
+		break;
+	case 'y':
+		degY = d;
+		break;
+	case'z':
+		degZ = d;
+		break;
+	default:
+		break;
+	}
+}
+
+void Monom::parse_monom(const string& str) { //-xy5
+	if (str.empty()) throw invalid_argument("empty monom");
+	string tmp = "";
+	char last = '~';
+	bool flag = 1;
+	for (const auto& c : str) {
+		if (!isalpha(c)) {
+			tmp += c;
+			continue;
+		}
+		flag = 0;
+		switch (last) {
+		case '~':
+			set_coeffitient(tmp);
+			break;
+		default:
+			set_degree(last, tmp);
+			break;
+		}
+		
+		last = c;
+		tmp = "";
+	}
+	flag ? set_coeffitient(tmp) : set_degree(last, tmp);
+}
+
+Monom::Monom(const string& monom){
+	match_pattern(monom);
+	parse_monom(monom);
+}
 
 bool Monom::equal(const Monom& m) const {
 	return (degX == m.degX && degY == m.degY && degZ == m.degZ);

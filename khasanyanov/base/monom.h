@@ -5,18 +5,24 @@
 #include <stdexcept>
 #include <string>
 #include <iostream>
+#include <regex>
 
 using namespace std;
 
 class Monom {
 	double k;
-	int degX,
-	degY,
-	degZ;
+	int degX = 0,
+	degY = 0,
+	degZ = 0;
+	void set_coeffitient(const string& str);
+	void set_degree(const char& c, const string& degree);
+	void match_pattern(const string& str) const;
+	void parse_monom(const string& str);
 public:
 	Monom();
 	Monom(double K, int X, int Y, int Z);
 	Monom(const Monom& m);
+	Monom(const string& s);
 	double get_coef() const;
 	int get_x() const;
 	int get_y() const;

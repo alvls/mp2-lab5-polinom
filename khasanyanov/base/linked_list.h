@@ -29,6 +29,12 @@ public:
 	void insert(int index, const TELEM& el);    // вставить элемент по индексу
 	TELEM& operator[](const size_t index);      // получить значение элемента по индексу
 	const TELEM& operator[](const size_t index) const;
+	LinkedList& operator=(const LinkedList& list);
+	friend void swap(LinkedList<TELEM>& lhs, LinkedList<TELEM>& rhs) {
+	swap(lhs.front, rhs.front);
+	swap(lhs.back, rhs.back);
+	swap(lhs.size, rhs.size);
+	}
 
 	TELEM& get_front();					    	// геттеры
 	TELEM& get_back();
@@ -197,6 +203,18 @@ inline const TELEM& LinkedList<TELEM>::operator[](const size_t index) const{
 	if (index < 0 || index > size) throw out_of_range("Invalid nidex");
 	return at(index)->data;
 }
+
+template<class TELEM>
+LinkedList<TELEM>& LinkedList<TELEM>::operator=(const LinkedList& list){
+	if (this != &list)
+	{
+		LinkedList tmp(list);
+		swap(*this, tmp);
+	}
+	return *this;
+}
+
+
 
 template <class TELEM>
 LinkedList<TELEM>::~LinkedList() { while (size>0) pop_back(); }

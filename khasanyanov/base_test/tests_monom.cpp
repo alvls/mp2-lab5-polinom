@@ -12,7 +12,7 @@ TEST(Monom, cam_copy_monom) {
 }
 
 TEST(Monom, can_create_monom_from_string) {
-	ASSERT_NO_THROW(Monom{ "-2xz4" });
+	ASSERT_NO_THROW(Monom{ "-2.9xz4" });
 }
 
 TEST(Monom, test_divide_operators) {

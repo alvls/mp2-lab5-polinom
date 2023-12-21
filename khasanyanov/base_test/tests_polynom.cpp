@@ -17,10 +17,10 @@ TEST(Polynom, can_copy_polynom) {
 
 TEST(Polynom, test_multiply_operators) {
 	Polynom p("3x2y2z3 + xy");
-	Polynom p1("xy2z2");
+	Monom p1("xy2z2");
 	Polynom res("3x3y4z5+x2y3z2");
 	ASSERT_NO_THROW(p * p1);
-	p *= p1;
+	p  = p * p1;
 	EXPECT_EQ(res, p);
 }
 

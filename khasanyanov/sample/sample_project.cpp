@@ -1,47 +1,70 @@
 #include <iostream>
+#include <windows.h>
 #include "sorted_list.h"
 #include "monom.h"
 #include "polynom.h"
 
-
-bool isStringMatchingPattern(const std::string& str) {
-    std::regex pattern("(-?\\d*)(x\\d*?)?(y\\d*?)?(z\\d*?)?");
-    return std::regex_match(str, pattern);
-}
-
-int main()
-{
-    cout << isStringMatchingPattern("-5x755y6") << endl;
-    cout << isStringMatchingPattern("xyz") << endl;
-    cout << isStringMatchingPattern("-5x7y6+21x3y4z3") << endl;
-    cout << isStringMatchingPattern("-x") << endl;
-    Polynom p, s, c;
-    p.add({ 2,3,4,2 });
-    p.add({ -4,5,5,6 });
-    p.add({ -23,5,5,6 });
-    p.add(Monom{ -3,3,4,2 } * Monom{2, 2, 2, 2});
-    p.add({ 35,-4,0,9 });
-    p.add({ -7,0,0,0 });
-    s = p.differential('z');
-    p *= Monom{ 2,2,2,2 };
-    cout << p << endl;
-    cout << s << endl;
-    s = p / p;
-    cout << s << endl;
-    cout  << "p= " << p.calculate(1, 2.4, 1) << endl;
-    SortedList<Monom> list;
-    for (int i = 0; i < 10; i += 2)
-        list.insert_in_order({1.0,i,i,i}, [](Monom x, Monom y) {return x > y; });
-    list.insert_in_order({2,3,4,2}, [](Monom x, Monom y) {return x > y; });
-    list.insert_in_order({-4,5,5,6}, [](Monom x, Monom y) {return x > y; });
-    list.insert_in_order({23,1,0,3}, [](Monom x, Monom y) {return x > y; });
-    list.insert_in_order({23,1,4,0 }, [](Monom x, Monom y) {return x > y; });
-    for (size_t i = 0; i < list.get_size(); i++)
-        std::cout << list[i] << " ";
-    Monom a(5, 2, 3, 4), b(3, 2, 3, 4);
-    cout << endl;
-    cout << "a+b=" << a + b << endl;
-    cout << "a-b=" << a - b << endl;
-    cout << "a*b=" << a * b << endl;
-    cout << "a/b=" << a / b << endl;
+int main() {
+    HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_GREEN | 0);
+    string expression, operation;
+    setlocale(LC_ALL, "ru");
+    setlocale(LC_NUMERIC, "en");
+    system("title Калькулятор полиномов");
+    auto& b_op = Polynom::binary_operations;
+    auto& u_op = Polynom::unary_operations;
+    auto& t_op = Polynom::binary_operations;
+    bool flag = 0;
+    while (!flag)
+    {
+        SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_GREEN | 0);
+        cout << "Введите арифметическое выражение: ";
+        getline(cin, expression);
+        try {
+            Polynom tmp(expression);
+            flag = true;
+        }
+        catch (invalid_argument) {
+            SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_RED | 0);
+            cout << "Неверное выражение" << endl;
+            system("PAUSE");
+            system("cls");
+        }
+    }
+    Polynom p(expression);
+    label:
+    while (1) {
+        SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_GREEN | 0);
+        system("cls");
+        cout << "Текущее арифметическое выражение: ";
+        cout << p << endl;
+        cout << "Введите операцию: ";
+        getline(cin, operation);
+        if (b_op.find(operation) != b_op.end()) {
+            string exp;
+            cout << "second expression: ";
+            getline(cin, exp);
+            flag = 0;
+            try {
+                Polynom tmp(exp);
+                flag = true;
+            }
+            catch (invalid_argument) {
+                SetConsoleTextAttribute(hConsoleHandle, FOREGROUND_RED | 0);
+                cout << "Неверное выражение" << endl;
+                system("PAUSE");
+                goto label;
+                
+            }
+            Polynom p1(exp);
+            cout << endl << "result: ";
+            p = b_op[operation](p, p1);
+        }
+        else if (u_op.find(operation) != u_op.end())
+            p = u_op[operation](p);
+        else if (operation == "exit")
+            exit(0);
+        else if (operation == "clr")
+            p = Polynom{};
+    }
 }

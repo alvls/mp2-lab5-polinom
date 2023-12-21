@@ -20,7 +20,7 @@ map<string, function<Polynom(const Polynom&, const Polynom&)> > Polynom::binary_
 	{"+", [](const Polynom& a, const Polynom& b) {return a + b; }},
 	{"-", [](const Polynom& a, const Polynom& b) {return a - b; }},
 	{"*", [](const Polynom& a, const Polynom& b) {return a * b; }},
-	//{"/", [](const Polynom& a, const Polynom& b) {return a / b; }}
+	{"/", [](const Polynom& a, const Polynom& b) {return a / b; }}
 };
 
 map<string, function<Polynom(const Polynom&)> > Polynom::unary_operations = {
@@ -32,6 +32,15 @@ map<string, function<Polynom(const Polynom&)> > Polynom::unary_operations = {
 	{"Fdy", [](const Polynom& a) {return a.primitive('y'); }},
 	{"Fdz", [](const Polynom& a) {return a.primitive('z'); }},
 };
+
+map<string, function<Polynom(const Polynom&, double&, double&, double&)> > Polynom::ternary_operations = {
+	{"=", [](const Polynom& p, const double& x, const double& y, const double& z) {return p.calculate(x,y,z); }}
+}
+
+map<string, function<Polynom(const Polynom&,
+	const double&, const double&, const double&, const double&, const double&, const double&)> > Polynom::integrals = {
+
+}
 
 void Polynom::parse_polynom(const string& str) { //-2x3y+yz2-4xyz
 	string tmp = str[0] == '-' ? "-" : "";
@@ -51,14 +60,17 @@ Polynom Polynom::primitive(char variable) const {
 	Polynom res;
 	switch (variable) {
 	case 'x':
+	case 'X':
 		for (const auto& m : monoms)
 			res.add({ m.get_coef() / (m.get_x() + 1), m.get_x() + 1, m.get_y(), m.get_z() });
 		break;
 	case 'y':
+	case 'Y':
 		for (const auto& m : monoms)
 			res.add({ m.get_coef() / (m.get_y() + 1), m.get_x(), m.get_y() + 1, m.get_z() });
 		break;
 	case 'z':
+	case 'Z':
 		for (const auto& m : monoms)
 			res.add({ m.get_coef() / (m.get_z() + 1), m.get_x(), m.get_y(), m.get_z() + 1 });
 		break;
@@ -85,7 +97,7 @@ Polynom Polynom::differential(char variable) const {
 	return res;
 }
 
-double Polynom::calculate(double x, double y, double z){
+double Polynom::calculate(double x, double y, double z) const {
 	if (monoms.empty()) throw logic_error("empty Polynom");
 	double res = 0.0;
 	for (const auto& m : monoms)
@@ -94,12 +106,16 @@ double Polynom::calculate(double x, double y, double z){
 }
 
 void Polynom::add(const Monom& m){
-	size_t size = monoms.get_size();
+	if (m.get_coef() == 0) return;
+	size_t i = 0;
 	for (auto& m1 : monoms) {
 		if (m1.equal(m)) {
 			m1 += m;
+			if (m1.get_coef() == 0)
+				monoms.erase(i);
 			return;
 		}
+		i++;
 	}
 	monoms.insert_in_order(m, [](Monom x, Monom y) {return x > y; });
 }
@@ -195,7 +211,7 @@ Polynom& Polynom::operator*=(const Polynom& p) {
 
 Polynom Polynom::operator*(const Monom& m) const {
 	Polynom res;
-	for (auto& m1: res.monoms)
+	for (auto& m1: monoms)
 		res.add(m1 * m);
 	return res;
 }
@@ -223,20 +239,18 @@ Polynom Polynom::operator/(const Polynom& p) const {
 	if (p.monoms.get_size() == 0) throw logic_error("divide by zero");
 	Polynom res, remainder(*this);
 	Monom cur = p.monoms.get_front();
-	while (remainder.monoms.get_size() != 0 && remainder.monoms.get_front() >= cur) {
-		Monom lead_rem = remainder.monoms.get_front();
-		Monom lead_quot(lead_rem / cur);
-		Polynom tmp;
-		tmp.add(lead_quot);
-		remainder -= tmp * p;
+	while (remainder.monoms.get_size() >= p.monoms.get_size()) {
+		Monom lead = remainder.monoms.get_front() / cur;
+		res += lead;
+		remainder -= p * lead;
 	}
-	return res + remainder;
+	return res;
 }
-//
-//Polynom& Polynom::operator/=(const Polynom& p) {
-//	*this = *this / p;
-//	return *this;
-//}
+
+Polynom& Polynom::operator/=(const Polynom& p) {
+	*this = *this / p;
+	return *this;
+}
 
 bool Polynom::operator==(const Polynom& p) const {
 	if (monoms.get_size() != p.monoms.get_size()) return false;
@@ -256,6 +270,10 @@ bool Polynom::operator<(const Polynom& p) const { return monoms.get_front() < p.
 bool Polynom::operator<=(const Polynom& p) const { return monoms.get_front() <= p.get_monoms().get_front(); }
 
 ostream& operator<<(ostream& os, const Polynom& p) {
+	if (p.monoms.empty()) {
+		os << "[]";
+		return os;
+	}
 	os << '[' << p.monoms.get_front();
 	for (auto it = ++p.monoms.cbegin(); it != p.monoms.cend(); ++it) 
 		if(it->get_coef() != 0)

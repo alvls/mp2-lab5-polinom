@@ -8,7 +8,7 @@ Monom::Monom(double K, int X, int Y, int Z) : k(K), degX(X), degY(Y), degZ(Z) {}
 Monom::Monom(const Monom& m) : k(m.k), degX(m.degX), degY(m.degY), degZ(m.degZ) {}
 
 void Monom::match_pattern(const string& str) const {
-	regex pattern("([+-]?\\d*)(x\\d*?)?(y\\d*?)?(z\\d*?)?");
+	regex pattern("([+-]?[\\d.]*)(x\\d*?)?(y\\d*?)?(z\\d*?)?");
 	if (!regex_match(str, pattern)) throw invalid_argument("invalid expression");
 }
 

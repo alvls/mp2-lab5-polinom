@@ -27,5 +27,8 @@
     <ClCompile Include="tests_polynom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests_sortedlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

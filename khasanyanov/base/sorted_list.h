@@ -7,7 +7,7 @@
 template <class TELEM>
 class SortedList : public LinkedList<TELEM> {
 public:
-	void insert_in_order(TELEM el, function<bool(TELEM x, TELEM y)> f);
+	void insert_in_order(TELEM el, function<bool(TELEM x, TELEM y)> f); // вставить в нужном порядке
 };
 
 template <class TELEM>

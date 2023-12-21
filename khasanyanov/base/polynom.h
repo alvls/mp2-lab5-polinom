@@ -14,27 +14,27 @@ using namespace std;
 class Polynom {
 
 	SortedList<Monom> monoms;
-	map<char, double> operands;
-	
 	void parse_polynom(const string& str);
 	string erase_spaces(const string& str);
 	
 public:
+	                                                       // операции
 	static map<string, function<Polynom(const Polynom&, const Polynom&)> > binary_operations;
 	static map<string, function<Polynom(const Polynom&)> > unary_operations;
-	static map<string, function<Polynom(const Polynom&, double&, double&, double&)> > ternary_operations;
-	static map<string, function<Polynom(const Polynom&, 
+	static map<string, function<double(const Polynom&, const double&, const double&, const double&)> > ternary_operations;
+	static map<string, function<double(const Polynom&, 
 		const double&, const double&, const double&, const double&, const double&, const double&)> > integrals;
+	                                                       // конструкторы    
 	Polynom();
 	Polynom(const string& str);
 	Polynom(const Polynom& p);
-	void add(const Monom& m);
-	double calculate(double x, double y, double z) const ;
-	Polynom differential(char variable) const ;
-	Polynom primitive(char variable) const;
 
+	void add(const Monom& m);                             // добавить моном в полином
+	double calculate(double x, double y, double z) const; // расёт значения в точке
+	Polynom differential(char variable) const ;           // расчёт производной
+	Polynom primitive(char variable) const;               // расчёт первообразной
+	                                                      // операторы
 	const LinkedList<Monom>& get_monoms() const;
-	const map<char, double>& get_operands() const;
 	Polynom operator+(const Polynom& p)const;
 	Polynom& operator+=(const Polynom& p);
 	Polynom operator-(const Polynom& p)const;

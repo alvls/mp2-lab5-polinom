@@ -27,7 +27,8 @@ public:
 	void pop_back();						    // удалить второй элемент
 	void erase(int index);					    // удалить элемент по индексу
 	void insert(int index, const TELEM& el);    // вставить элемент по индексу
-	TELEM& operator[](const size_t index);      // получить значение элемента по индексу
+
+	TELEM& operator[](const size_t index);      // операторы
 	const TELEM& operator[](const size_t index) const;
 	LinkedList& operator=(const LinkedList& list);
 	friend void swap(LinkedList<TELEM>& lhs, LinkedList<TELEM>& rhs) {

@@ -15,6 +15,14 @@ TEST(Polynom, can_copy_polynom) {
 	EXPECT_EQ(p, Polynom{ p });
 }
 
+TEST(Polynom, test_add_monom) {
+	Polynom p("3x2y2z3 + xy");
+	Monom p1("xy2z2");
+	Polynom res("3x2y2z3+xy2z2 + xy");
+	ASSERT_NO_THROW(p.add(p1));
+	EXPECT_EQ(res, p);
+}
+
 TEST(Polynom, test_multiply_operators) {
 	Polynom p("3x2y2z3 + xy");
 	Monom p1("xy2z2");
@@ -24,7 +32,7 @@ TEST(Polynom, test_multiply_operators) {
 	EXPECT_EQ(res, p);
 }
 
-TEST(Polynom, test_minus_operators) {
+TEST(Polynom, test_subtract_operators) {
 	Polynom p("3x2y2z3 + xy");
 	Polynom p1("xy2z2");
 	Polynom res("3x2y2z3 + xy - xy2z2");
@@ -43,10 +51,39 @@ TEST(Polynom, test_plus_operators) {
 }
 
 TEST(Polynom, test_divide_operators) {
-	Polynom p("3x2y2z3 + x4y4z5");
-	Monom m("xy2z2");
-	Polynom res("3xz + x3y2z3");
+	Polynom p("x3-12x2-42");
+	Polynom m("x-3");
+	Polynom res("x2-9x-27");
 	ASSERT_NO_THROW(p / m);
 	p /= m;
 	EXPECT_EQ(res, p);
+}
+
+TEST(Polynom, test_calculate) {
+	Polynom p("3x2y2z3 + xy");
+	ASSERT_NO_THROW(p.calculate(2,1,2));
+	EXPECT_EQ(98, p.calculate(2,1,2));
+}
+
+TEST(Polynom, test_compare_operators) {
+	Polynom p("3x2y2z3 + xy");
+	Polynom p1("3x3y2z3 + xy");
+	EXPECT_EQ(true,p1 != p);
+	EXPECT_EQ(true, p1 > p);
+	EXPECT_EQ(false, p1 < p);
+	EXPECT_EQ(true, p1 >= p);
+	EXPECT_EQ(false, p1 <= p);
+	EXPECT_EQ(false, p1 == p);
+}
+
+TEST(Polynom, test_differential) {
+	Polynom p("3x2z + xy");
+	ASSERT_NO_THROW(p.differential('x'));
+	EXPECT_EQ(Polynom{"6xz+y"}, p.differential('x'));
+}
+
+TEST(Polynom, test_primitive) {
+	Polynom p("2xz+3x2 -5");
+	ASSERT_NO_THROW(p.primitive('x'));
+	EXPECT_EQ(Polynom{ "x2z+x3-5x" }, p.primitive('x'));
 }

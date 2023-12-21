@@ -162,14 +162,32 @@ Monom& Monom::operator/=(const double& k) {
 	return *this;
 }
 
-ostream& operator<<(ostream& os, const Monom& m) {
+ostream& operator<<(ostream& os, const Monom& m) { //не нужно сюда смотреть, времени не остаётся совсем
 	if (m.k == 0) return os;
-	else if (m.k == 1) os << '{';
-	else if (m.k == -1) os << "{-";
+	else if (m.k == 1) {
+		if (m.degX == 0 && m.degY == 0 && m.degZ == 0) {
+			os << "{1}";
+			return os;
+		}
+		os << '{';
+	}
+	else if (m.k == -1) { 
+		if (m.degX == 0 && m.degY == 0 && m.degZ == 0) {
+			os << "{-1}";
+			return os;
+		}
+		os << "{-"; 
+	}
 	else os << '{' << m.k;
-	m.degX == 0 ? os << "" : os << "x" << m.degX;
-	m.degY == 0 ? os << "" : os << "y" << m.degY;
-	m.degZ == 0 ? os << "" : os << "z" << m.degZ;
+	if (m.degX == 0) os << "";
+	else if (m.degX == 1) os << "x";
+	else os << "x" << m.degX;
+	if (m.degY == 0) os << "";
+	else if (m.degY == 1) os << "y";
+	else os << "y" << m.degY;
+	if (m.degZ == 0) os << "";
+	else if (m.degZ == 1) os << "z";
+	else os << "z" << m.degZ;
 	os << '}';
 	return os;
 }

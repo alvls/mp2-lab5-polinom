@@ -4,7 +4,7 @@ Polynom::Polynom() {}
 
 Polynom::Polynom(const string& str) { parse_polynom(erase_spaces(str)); }
 
-Polynom::Polynom(const Polynom& p) : operands(p.operands), monoms(p.monoms) {}
+Polynom::Polynom(const Polynom& p) : monoms(p.monoms) {}
 
 string Polynom::erase_spaces(const string& s)
 {
@@ -33,14 +33,22 @@ map<string, function<Polynom(const Polynom&)> > Polynom::unary_operations = {
 	{"Fdz", [](const Polynom& a) {return a.primitive('z'); }},
 };
 
-map<string, function<Polynom(const Polynom&, double&, double&, double&)> > Polynom::ternary_operations = {
+map<string, function<double(const Polynom&, const double&, const double&, const double&)> > Polynom::ternary_operations = {
 	{"=", [](const Polynom& p, const double& x, const double& y, const double& z) {return p.calculate(x,y,z); }}
-}
+};
 
-map<string, function<Polynom(const Polynom&,
-	const double&, const double&, const double&, const double&, const double&, const double&)> > Polynom::integrals = {
-
-}
+map<string, function<double(const Polynom&,const double&, const double&, const double&, 
+	const double&, const double&, const double&)> > Polynom::integrals = {
+		{"Idx",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
+	const double& x2, const double& y2, const double& z2) 
+		{return p.primitive('x').calculate(x1,y1,z1) - p.primitive('x').calculate(x2,y2,z2); }},
+	{"Idy",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
+	const double& x2, const double& y2, const double& z2)
+		{return p.primitive('y').calculate(x1,y1,z1) - p.primitive('y').calculate(x2,y2,z2); }},
+	{"Idz",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
+	const double& x2, const double& y2, const double& z2)
+		{return p.primitive('z').calculate(x1,y1,z1) - p.primitive('z').calculate(x2,y2,z2); }},
+};
 
 void Polynom::parse_polynom(const string& str) { //-2x3y+yz2-4xyz
 	string tmp = str[0] == '-' ? "-" : "";
@@ -121,8 +129,6 @@ void Polynom::add(const Monom& m){
 }
 
 const LinkedList<Monom>& Polynom::get_monoms() const { return monoms; }
-
-const map<char, double>& Polynom::get_operands() const { return operands; }
 
 Polynom Polynom::operator*(const double& k) const {
 	Polynom res(*this);
@@ -237,6 +243,7 @@ Polynom& Polynom::operator/=(const Monom& p) {
 
 Polynom Polynom::operator/(const Polynom& p) const {
 	if (p.monoms.get_size() == 0) throw logic_error("divide by zero");
+	if (*this == p) return Polynom{ "1" };
 	Polynom res, remainder(*this);
 	Monom cur = p.monoms.get_front();
 	while (remainder.monoms.get_size() >= p.monoms.get_size()) {

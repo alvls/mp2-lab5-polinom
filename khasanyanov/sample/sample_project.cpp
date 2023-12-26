@@ -46,7 +46,7 @@ int main() {
         getline(cin, operation);
         if (b_op.find(operation) != b_op.end()) {
             string exp;
-            cout << "second expression: ";
+            cout << "¬ведите второе выражение: ";
             getline(cin, exp);
             flag = 0;
             try {
@@ -66,30 +66,18 @@ int main() {
         else if (u_op.find(operation) != u_op.end())
             p = u_op[operation](p);
         else if (t_op.find(operation) != t_op.end()) {
-            double x, y, z;
-            cout << "¬ведите значение х: ";
-            cin >> x;
-            cout << "¬ведите значение y: ";
-            cin >> y;
-            cout << "¬ведите значение z: ";
-            cin >> z;
-            p = Polynom{ to_string(t_op[operation](p, x, y, z))};
+            Point point;
+            cout << "¬ведите координаты точки(x,y,z): ";
+            cin >> point;
+            p = Polynom{ to_string(t_op[operation](p,point))};
         }
         else if (i_op.find(operation) != i_op.end()) {
-            double x1, y1, z1, x2, y2, z2;
-            cout << "¬ведите значение х1: ";
-            cin >> x1;
-            cout << "¬ведите значение y1: ";
-            cin >> y1;
-            cout << "¬ведите значение z1: ";
-            cin >> z1;
-            cout << "¬ведите значение х2: ";
-            cin >> x2;
-            cout << "¬ведите значение y2: ";
-            cin >> y2;
-            cout << "¬ведите значение z2: ";
-            cin >> z2;
-            p = Polynom{ to_string(i_op[operation](p, x1, y1, z1, x2,y2,z2)) };
+            Point point1, point2;
+            cout << "¬ведите координаты первой точки(x,y,z): ";
+            cin >> point1;
+            cout << "¬ведите координаты второй точки(x,y,z): ";
+            cin >> point2;
+            p = Polynom{ to_string(i_op[operation](p, point1, point2)) };
         }
         else if (operation == "exit")
             exit(0);

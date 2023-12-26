@@ -33,21 +33,17 @@ map<string, function<Polynom(const Polynom&)> > Polynom::unary_operations = {
 	{"Fdz", [](const Polynom& a) {return a.primitive('z'); }},
 };
 
-map<string, function<double(const Polynom&, const double&, const double&, const double&)> > Polynom::ternary_operations = {
-	{"=", [](const Polynom& p, const double& x, const double& y, const double& z) {return p.calculate(x,y,z); }}
+map<string, function<double(const Polynom&, Point&)> > Polynom::ternary_operations = {
+	{"=", [](const Polynom& p, Point& p1) {return p.calculate(p1); }}
 };
 
-map<string, function<double(const Polynom&,const double&, const double&, const double&, 
-	const double&, const double&, const double&)> > Polynom::integrals = {
-		{"Idx",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
-	const double& x2, const double& y2, const double& z2) 
-		{return p.primitive('x').calculate(x1,y1,z1) - p.primitive('x').calculate(x2,y2,z2); }},
-	{"Idy",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
-	const double& x2, const double& y2, const double& z2)
-		{return p.primitive('y').calculate(x1,y1,z1) - p.primitive('y').calculate(x2,y2,z2); }},
-	{"Idz",[](const Polynom& p, const double& x1, const double& y1, const double& z1,
-	const double& x2, const double& y2, const double& z2)
-		{return p.primitive('z').calculate(x1,y1,z1) - p.primitive('z').calculate(x2,y2,z2); }},
+map<string, function<double(const Polynom&,Point&, Point&)> > Polynom::integrals = {
+		{"Idx",[](const Polynom& p, Point& p1,Point& p2) 
+		{return p.primitive('x').calculate(p1) - p.primitive('x').calculate(p2); }},
+	{"Idy",[](const Polynom& p, Point& p1,Point& p2)
+		{return p.primitive('y').calculate(p1) - p.primitive('y').calculate(p2); }},
+	{"Idz",[](const Polynom& p, Point& p1,Point& p2)
+		{return p.primitive('z').calculate(p1) - p.primitive('z').calculate(p2); }},
 };
 
 void Polynom::parse_polynom(const string& str) { //-2x3y+yz2-4xyz
@@ -110,6 +106,14 @@ double Polynom::calculate(double x, double y, double z) const {
 	double res = 0.0;
 	for (const auto& m : monoms)
 		res += m.calculate(x,y,z);
+	return res;
+}
+
+double Polynom::calculate(Point& p) const{
+	if (monoms.empty()) throw logic_error("empty Polynom");
+	double res = 0.0;
+	for (const auto& m : monoms)
+		res += m.calculate(p.x, p.y, p.z);
 	return res;
 }
 

@@ -68,12 +68,12 @@ TEST(Polynom, test_calculate) {
 TEST(Polynom, test_compare_operators) {
 	Polynom p("3x2y2z3 + xy");
 	Polynom p1("3x3y2z3 + xy");
-	EXPECT_EQ(true,p1 != p);
-	EXPECT_EQ(true, p1 > p);
-	EXPECT_EQ(false, p1 < p);
-	EXPECT_EQ(true, p1 >= p);
-	EXPECT_EQ(false, p1 <= p);
-	EXPECT_EQ(false, p1 == p);
+	EXPECT_TRUE(p1 != p);
+	EXPECT_TRUE(p1 > p);
+	EXPECT_FALSE(p1 < p);
+	EXPECT_TRUE(p1 >= p);
+	EXPECT_FALSE(p1 <= p);
+	EXPECT_FALSE(p1 == p);
 }
 
 TEST(Polynom, test_differential) {
@@ -86,4 +86,11 @@ TEST(Polynom, test_primitive) {
 	Polynom p("2xz+3x2 -5");
 	ASSERT_NO_THROW(p.primitive('x'));
 	EXPECT_EQ(Polynom{ "x2z+x3-5x" }, p.primitive('x'));
+}
+
+TEST(Polynom, test_point) {
+	Polynom p("3x2y2z3 + xy");
+	Point point{ 2,1,2 };
+	ASSERT_NO_THROW(p.calculate(point));
+	EXPECT_EQ(98, p.calculate(point));
 }
